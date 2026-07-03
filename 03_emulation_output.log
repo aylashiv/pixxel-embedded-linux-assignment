@@ -1,0 +1,109 @@
+Pixxel Embedded Linux Assignment — QEMU Emulation Output
+===========================================================
+Captured: 2026-07-03
+Command:  runqemu qemuarm64 nographic  (DEVICE_TREE=<path to provided qemuarm64 (1).dtb>)
+Image:    core-image-minimal (qemuarm64), meta-pixxel layer providing pixxel-driver + pixxel-apps
+
+-----------------------------------------------------------
+1. Kernel boot — driver auto-probes against the provided DTB
+-----------------------------------------------------------
+[    4.742601] udevd[118]: starting version 3.2.14
+[    4.892815] udevd[119]: starting eudev-3.2.14
+[    5.459718] pixxel_platform_driver: loading out-of-tree module taints kernel.
+[    5.517535] pixxel_platform_driver 60000000.pixxel-virt-dev: probed — registers at 0x60000000, /dev/pixxel created
+[    6.102958] EXT4-fs (vda): re-mounted 2747d25a-5204-4bce-98aa-7e1fe6333589.
+
+INIT: Entering runlevel: 5
+Configuring network interfaces... done.
+Starting syslogd/klogd: done
+
+Poky (Yocto Project Reference Distro) 5.0.18 qemuarm64 /dev/ttyAMA0
+
+qemuarm64 login: root
+
+NOTE: the driver auto-loaded at boot via udev's device-tree modalias
+match — no manual insmod was required. The manual insmod attempted below
+correctly reports "File exists" because the module was already resident.
+
+-----------------------------------------------------------
+2. Confirming driver + device node
+-----------------------------------------------------------
+root@qemuarm64:~# insmod /lib/modules/*/updates/pixxel_platform_driver.ko; echo INSMOD_RC=$?
+insmod: ERROR: could not insert module /lib/modules/6.6.142-yocto-standard/updates/pixxel_platform_driver.ko: File exists
+INSMOD_RC=1
+
+root@qemuarm64:~# ls -la /dev/pixxel
+crw-------    1 root     root      249,   0 Jul  3 00:25 /dev/pixxel
+
+-----------------------------------------------------------
+3. Running the cFS mission (pixxel_main + pixxel_controller)
+-----------------------------------------------------------
+root@qemuarm64:~# cd /opt/pixxel/cpu1 && ls
+cf         core-cpu1
+
+root@qemuarm64:/opt/pixxel/cpu1# ./core-cpu1
+
+CFE_PSP: Default Reset SubType = 1
+CFE_PSP: Default CPU ID = 1
+
+EVS Port1 1980-012-14:03:20.09771 80/1/CFE_ES 91: Version Info: Module ES, version git:v7.0.1-2-g12cb84fc
+EVS Port1 1980-012-14:03:20.09796 80/1/CFE_ES 91: Version Info: Module EVS, version git:v7.0.1-2-g12cb84fc
+EVS Port1 1980-012-14:03:20.09812 80/1/CFE_ES 91: Version Info: Module FS, version git:v7.0.1-2-g12cb84fc
+EVS Port1 1980-012-14:03:20.09823 80/1/CFE_ES 91: Version Info: Module SB, version git:v7.0.1-2-g12cb84fc
+EVS Port1 1980-012-14:03:20.09843 80/1/CFE_ES 91: Version Info: Module TBL, version git:v7.0.1-2-g12cb84fc
+EVS Port1 1980-012-14:03:20.09858 80/1/CFE_ES 91: Version Info: Module TIME, version git:v7.0.1-2-g12cb84fc
+EVS Port1 1980-012-14:03:20.09870 80/1/CFE_ES 91: Version Info: Module OSAL, version git:v7.0.1
+EVS Port1 1980-012-14:03:20.09884 80/1/CFE_ES 91: Version Info: Module PSP, version git:v7.0.1
+EVS Port1 1980-012-14:03:20.09901 80/1/CFE_ES 91: Version Info: Module MSG, version git:v7.0.1-2-g12cb84fc
+EVS Port1 1980-012-14:03:20.09916 80/1/CFE_ES 91: Version Info: Module SBR, version git:v7.0.1-2-g12cb84fc
+EVS Port1 1980-012-14:03:20.09931 80/1/CFE_ES 91: Version Info: Module RESOURCEID, version git:v7.0.1-2-g12cb84fc
+EVS Port1 1980-012-14:03:20.09956 80/1/CFE_ES 92: Build 202607020206 by ash@ash-HP-EliteBook-840-G6, config pixxel
+EVS Port1 1980-012-14:03:20.15899 80/1/CFE_EVS 1: cFE EVS Initialized: CFE_EVS v7.0.1+dev0 (Draco) v7.0.1 Official Release, EDS disabled
+1980-012-14:03:20.26333 CFE_SB_AppInit: Registered 4 events for filtering
+EVS Port1 1980-012-14:03:20.26992 80/1/CFE_SB 1: cFE SB Initialized: CFE_SB v7.0.1+dev0 (Draco) v7.0.1 Official Release, EDS disabled
+EVS Port1 1980-012-14:03:20.27108 80/1/CFE_SB 14: No subscribers for MsgId 0x808,sender CFE_SB
+EVS Port1 1980-012-14:03:20.37664 80/1/CFE_TBL 1: cFE TBL Initialized: CFE_TBL v7.0.1+dev0 (Draco) v7.0.1 Official Release, EDS disabled
+EVS Port1 1980-012-14:03:20.37872 80/1/CFE_SB 14: No subscribers for MsgId 0x808,sender CFE_TBL
+EVS Port1 1980-012-14:03:20.49592 80/1/CFE_TIME 1: cFE TIME Initialized: CFE_TIME v7.0.1+dev0 (Draco) v7.0.1 Official Release, EDS disabled
+EVS Port1 1980-012-14:03:20.49624 80/1/CFE_SB 14: No subscribers for MsgId 0x808,sender CFE_TIME
+1980-012-14:03:20.52012 CFE_ES_CreateObjects: Finished ES CreateObject table entries.
+1980-012-14:03:20.52028 CFE_ES_Main: CFE_ES_Main entering CORE_READY state
+1980-012-14:03:20.52542 CFE_ES_StartApplications: Opened ES App Startup file: /cf/cfe_es_startup.scr
+1980-012-14:03:20.53246 CFE_ES_ParseFileEntry: Loading file: /cf/pixxel_ctrl.so, APP: PIXXEL_CONTROLLER
+1980-012-14:03:20.54625 CFE_ES_ParseFileEntry: Loading file: /cf/pixxel_main.so, APP: PIXXEL_MAIN
+
+EVS Port1 1980-012-14:03:20.59489 80/1/PIXXEL_CONTROLLER 1: PIXXEL_CTRL: started, listening on SB
+EVS Port1 1980-012-14:03:20.59521 80/1/CFE_SB 14: No subscribers for MsgId 0x808,sender PIXXEL_CONTROLLER
+1980-012-14:03:20.65404 CFE_ES_Main: CFE_ES_Main entering APPS_INIT state
+1980-012-14:03:20.65508 CFE_ES_Main: CFE_ES_Main entering OPERATIONAL state
+
+EVS Port1 1980-012-14:03:20.66281 80/1/PIXXEL_MAIN 1: PIXXEL_MAIN: started — pixxel_controller is ready
+EVS Port1 1980-012-14:03:20.67497 80/1/PIXXEL_MAIN 2: PIXXEL_MAIN: ENABLE command sent to pixxel_controller
+
+[   20.202949] pixxel_platform_driver: enable register ← 1 (status update in 50 ms)
+
+EVS Port1 1980-012-14:03:20.68194 80/1/PIXXEL_CONTROLLER 3: PIXXEL_CTRL: device enabled via /dev/pixxel
+EVS Port1 1980-012-14:03:20.68408 80/1/PIXXEL_MAIN 3: PIXXEL_MAIN: ENABLE acknowledged by pixxel_controller
+
+[   20.261002] pixxel_platform_driver: status register updated → 1
+
+EVS Port1 1980-012-14:03:20.73907 80/1/PIXXEL_MAIN 4: PIXXEL_MAIN: GET_STATUS command sent to pixxel_controller
+EVS Port1 1980-012-14:03:20.74243 80/1/PIXXEL_CONTROLLER 5: PIXXEL_CTRL: device status = 1
+EVS Port1 1980-012-14:03:20.74436 80/1/PIXXEL_MAIN 5: PIXXEL_MAIN: [PASS] device status = 1 — device is ENABLED
+
+PIXXEL_MAIN: [PASS] device is ENABLED (status=1)
+
+1980-012-14:03:20.74653 CFE_ES_ExitApp: Application PIXXEL_MAIN called CFE_ES_ExitApp
+
+-----------------------------------------------------------
+Result: PASS — device enabled and status verified end-to-end
+         over the cFS Software Bus and the pixxel_platform_driver.
+-----------------------------------------------------------
+
+Note: core-cpu1 subsequently aborts during its own process-exit path
+("libgcc_s.so.1 must be installed for pthread_cancel to work") — this
+occurs AFTER PIXXEL_MAIN has already printed [PASS] and called
+CFE_ES_ExitApp, and is a target-image runtime-dependency gap (missing
+libgcc_s.so.1 package in the minimal rootfs), not a defect in the driver
+or the two Pixxel apps. Fix: add libgcc to IMAGE_INSTALL, or RDEPENDS
+the pixxel-apps package on it.

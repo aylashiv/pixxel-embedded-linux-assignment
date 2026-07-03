@@ -1,0 +1,45 @@
+# Kernel module build artifacts
+driver/*.ko
+driver/*.o
+driver/*.mod
+driver/*.mod.c
+driver/*.symvers
+driver/*.order
+driver/.*.cmd
+driver/.tmp*
+driver/modules.order
+driver/Module.symvers
+
+# cFS cloned dependencies (fetched by build.sh at build time)
+cfs-apps/mission/cfe/
+cfs-apps/mission/osal/
+cfs-apps/mission/psp/
+cfs-apps/mission/tools/
+
+# cFS build output
+cfs-apps/mission/build/
+
+# Full Yocto/BitBake reference clone + build cache (~21GB) — reproducible
+# via meta-pixxel/ + a fresh `git clone --branch scarthgap
+# https://git.yoctoproject.org/poky`. Never commit this.
+poky/
+
+# Yocto build output (large — never commit)
+build/
+tmp/
+downloads/
+sstate-cache/
+
+# Stale duplicate snapshot from an earlier point in the project.
+new_docs_plasg/
+new_docs_plasg.zip
+
+# Claude Code's own session state — not project content.
+.claude/
+
+# Generated docs (optional — remove these lines if you want to commit them)
+# *.docx
+
+# Python cache
+__pycache__/
+*.pyc

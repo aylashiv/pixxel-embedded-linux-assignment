@@ -1,0 +1,3 @@
+CFE_APP, /cf/pixxel_ctrl.so, PIXXEL_CTRL_AppMain, PIXXEL_CONTROLLER, 70, 16384, 0x0, 0;
+CFE_APP, /cf/pixxel_main.so,       PIXXEL_MAIN_AppMain, PIXXEL_MAIN,       80, 16384, 0x0, 0;
+! End of startup script — cFE stops parsing at the first '!' character
